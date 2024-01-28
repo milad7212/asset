@@ -3,12 +3,27 @@ import Image from "next/image";
 import { useState, Fragment } from "react";
 import TimeLine from "./components/TimeLine";
 import { Dialog, Transition } from "@headlessui/react";
+const textModal = [
+  {
+    title: "انتخاب گروه",
+  },
+];
 export default function Home() {
   const [witchLevel, setWitchLevel] = useState(1);
   const [isAsset, setIsAsset] = useState(0);
   const [openModalGroup, setOpenModalGroup] = useState(false);
+  const [showgroup, setShowgroup] = useState("");
+  const [showCategory, setShowCategory] = useState("");
+  const [minStep, setMinStep] = useState("گروه");
+  const [showInModal, setShowInModal] = useState("");
   function closeModal() {
     setOpenModalGroup(false);
+    if (showInModal == "group") {
+      setShowgroup(true);
+    }
+    if (showInModal == "category") {
+      setShowCategory(true);
+    }
   }
 
   function openModal() {
@@ -25,7 +40,13 @@ export default function Home() {
       setWitchLevel(2);
     }
   }
-  function handelOpenSelectGroup() {
+  function handelOpenSelectGroup(value) {
+    if (value == "group") {
+      setShowInModal("group");
+    }
+    if (value == "category") {
+      setShowInModal("category");
+    }
     setOpenModalGroup(true);
   }
 
@@ -78,15 +99,31 @@ export default function Home() {
                 <span className="absolute rounded-full -top-2 right-0 w-8 h-8 flex justify-center items-center text-teal-50 bg-red-600 font-bold">
                   1
                 </span>
-                <button onClick={handelOpenSelectGroup} className="font-bold ">
-                  انتخاب گروه
+                <button
+                  onClick={() => handelOpenSelectGroup("group")}
+                  className="font-bold "
+                >
+                  انتخاب گروه:
+                  {showgroup && (
+                    <span className=" mr-4 font-bold text-gray-600">
+                      اثاثه و منصوبات
+                    </span>
+                  )}
                 </button>
               </div>
               <div className="bg-gray-50 p-6 rounded-md shadow-lg relative">
                 <span className="absolute rounded-full -top-2 right-0 w-8 h-8 flex justify-center items-center text-teal-50 bg-red-600 font-bold">
                   2
                 </span>
-                <button className="font-bold ">انتخاب طبقه</button>
+                <button
+                  onClick={() => handelOpenSelectGroup("category")}
+                  className="font-bold "
+                >
+                  <span className="inline-block">انتخاب طبقه</span>
+                  {showCategory && (
+                    <span className=" mr-4 font-bold text-gray-600">صندلی</span>
+                  )}
+                </button>
               </div>
               <div className="bg-gray-50 p-6 rounded-md shadow-lg relative">
                 <span className="absolute rounded-full -top-2 right-0 w-8 h-8 flex justify-center items-center text-teal-50 bg-red-600 font-bold">
@@ -106,6 +143,16 @@ export default function Home() {
                 </span>
                 <button className="font-bold ">انتخاب مجتمع</button>
               </div>
+              <div className="bg-gray-50 p-6 rounded-md shadow-lg relative">
+                <span className="absolute rounded-full -top-2 right-0 w-8 h-8 flex justify-center items-center text-teal-50 bg-red-600 font-bold">
+                  6
+                </span>
+                <button className="font-bold ">انتخاب تحویل گیرنده</button>
+              </div>
+              {/* <button className="bg-blue-900 w-full py-8 rounded-md text-white font-bold animate-pulse">
+                {" "}
+                مرحله بعد
+              </button> */}
             </div>
           </>
         )}
@@ -140,37 +187,82 @@ export default function Home() {
                     as="h3"
                     className="text-lg text-right font-medium leading-6 text-gray-900"
                   >
-                    انتخاب گروه
+                    {showInModal == "group" && <span>انتخاب گروه</span>}
+                    {showInModal == "category" && <span>انتخاب طبقه </span>}
+                    {showInModal == "count" && <span>مشخص کردن تعداد </span>}
+                    {showInModal == "price" && <span> مشخص کردن قیمت</span>}
+                    {showInModal == "complex" && <span>انتخاب مجتمع</span>}
                   </Dialog.Title>
                   <div className="mt-2 text-right text-sm text-gray-700">
-                    <p className="">
-                      برای انتخاب گروه view در اختبارتان قرار میگیرد که از آن
-                      گروه مد نظر را انتخاب میکنید
-                    </p>
-                    <p className="mt-8">
-                      {" "}
-                      برای مثال گروه 16 : اثاثه و منصوبات انتخاب می شود
-                    </p>
-                    <div className="">
-                      <table class="table-auto my-6">
-                        <thead>
-                          <tr>
-                            <th className=" whitespace-nowrap pl-4">
-                              شناسه گروه
-                            </th>
-                            <th className="w-full">نام گروه</th>
-                            <th className=" whitespace-nowrap pl-4">کد گروه</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>234</td>
-                            <td>اثاثه و منصویات</td>
-                            <td>16</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    {showInModal == "group" && (
+                      <>
+                        <p className="">
+                          برای انتخاب گروه view در اختیارتان قرار میگیرد که از
+                          آن گروه مد نظر را انتخاب میکنید
+                        </p>
+                        <p className="mt-8">
+                          {" "}
+                          برای مثال گروه 16 : اثاثه و منصوبات انتخاب می شود
+                        </p>
+                        <div className="">
+                          <table class="table-auto my-6">
+                            <thead>
+                              <tr>
+                                <th className=" whitespace-nowrap pl-4">
+                                  شناسه گروه
+                                </th>
+                                <th className="w-full">نام گروه</th>
+                                <th className=" whitespace-nowrap pl-4">
+                                  کد گروه
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>234</td>
+                                <td>اثاثه و منصویات</td>
+                                <td>16</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </>
+                    )}
+
+                    {showInModal == "category" && (
+                      <>
+                        <p className="">
+                          براساس id گروه انتخاب شده طبقات را فیلتر کنید و کاربر
+                          می تواند یکی از آن ها را انتخاب کند
+                        </p>
+                        <p className="mt-8">
+                          {" "}
+                          برای مثال برای گروه 16 طبقه صندلی انتخاب می شود
+                        </p>
+                        <div className="">
+                          <table class="table-auto my-6">
+                            <thead>
+                              <tr>
+                                <th className=" whitespace-nowrap pl-4">
+                                  شناسه طبقه{" "}
+                                </th>
+                                <th className="w-full">نام طبقه</th>
+                                <th className=" whitespace-nowrap pl-4">
+                                  کد طبقه{" "}
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>864</td>
+                                <td> صندلی</td>
+                                <td>248</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div className="mt-4">
@@ -188,22 +280,6 @@ export default function Home() {
           </div>
         </Dialog>
       </Transition>
-      {/* <Dialog open={openModalGroup} onClose={() => setOpenModalGroup(false)}>
-        <Dialog.Panel>
-          <Dialog.Title>Deactivate account</Dialog.Title>
-          <Dialog.Description>
-            This will permanently deactivate your account
-          </Dialog.Description>
-
-          <p>
-            Are you sure you want to deactivate your account? All of your data
-            will be permanently removed. This action cannot be undone.
-          </p>
-
-          <button onClick={() => setIsOpen(false)}>Deactivate</button>
-          <button onClick={() => setIsOpen(false)}>Cancel</button>
-        </Dialog.Panel>
-      </Dialog> */}
     </div>
   );
 }
